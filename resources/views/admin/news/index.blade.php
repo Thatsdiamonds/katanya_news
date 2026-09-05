@@ -79,7 +79,7 @@
                                         @endif
 
                                         @if(auth()->user()->role === 'superadmin' && $item->status === 'approved')
-                                        <form method="POST" action="{{ route('admin.news.review', $item) }}" class="inline">
+                                        <form method="POST" action="{{ route('admin.news.review', $item) }}" class="inline" onsubmit="return window.confirm('Apakah Anda yakin ingin mempublikasikan artikel ini?');">
                                             @csrf
                                             <input type="hidden" name="action" value="publish">
                                             <x-ui.button type="submit" variant="ghost" size="sm" class="text-emerald-600 hover:text-emerald-800">
@@ -95,7 +95,7 @@
                                         @endcan
 
                                         @can('submit', $item)
-                                        <form method="POST" action="{{ route('admin.news.submit', $item) }}" class="inline">
+                                        <form method="POST" action="{{ route('admin.news.submit', $item) }}" class="inline" onsubmit="return window.confirm('Apakah Anda yakin ingin mengirim artikel ini untuk ditinjau?');">
                                             @csrf
                                             <x-ui.button type="submit" variant="ghost" size="sm" class="text-indigo-600 hover:text-indigo-800">
                                                 Submit

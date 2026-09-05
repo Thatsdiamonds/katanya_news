@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\News;
 use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
+use App\Services\NewsSlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -33,6 +34,28 @@ class AdminNewsController extends Controller
         return view('admin.news.create', compact('categories'));
     }
 
+    public function slugSuggestions(Request $request, NewsSlugService $slugService)
+    {
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'ignore' => ['nullable', 'integer', 'exists:news,id'],
+        ]);
+
+        $ignoredNews = null;
+        if ($request->filled('ignore')) {
+            $ignoredNews = News::findOrFail($request->integer('ignore'));
+            if ($request->user()->cannot('update', $ignoredNews)) {
+                abort(403);
+            }
+        } else {
+            if ($request->user()->cannot('create', News::class)) {
+                abort(403);
+            }
+        }
+
+        return response()->json($slugService->suggest($request->string('title')->toString(), $ignoredNews));
+    }
+
     public function store(StoreNewsRequest $request)
     {
         $validated = $request->validated();
@@ -58,6 +81,12 @@ class AdminNewsController extends Controller
     public function update(UpdateNewsRequest $request, News $news)
     {
         $validated = $request->validated();
+
+        if ($request->input('title') !== $news->title
+            && ! $request->boolean('slug_manual')
+            && ! $request->boolean('slug_change_confirmed')) {
+            $validated['slug'] = $news->slug;
+        }
 
         if ($request->hasFile('image')) {
             // Delete old image

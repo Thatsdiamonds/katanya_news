@@ -9,7 +9,7 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
      <?php $__env->slot('header', null, []); ?> 
-        <div class="flex items-center space-x-4">
+        <div class="flex justify-between items-center gap-4">
             <a href="<?php echo e(route('admin.news.index')); ?>" class="text-gray-400 hover:text-gray-500">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
             </a>
@@ -149,14 +149,14 @@
                         <div class="sm:col-span-2">
                             <?php if (isset($component)) { $__componentOriginalb2c43a998f3174877f99993c62e16bb4 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalb2c43a998f3174877f99993c62e16bb4 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.label','data' => ['for' => 'category_id','value' => 'Category']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.label','data' => ['for' => 'category_id','value' => 'Category *']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('ui.label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'category_id','value' => 'Category']); ?>
+<?php $component->withAttributes(['for' => 'category_id','value' => 'Category *']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalb2c43a998f3174877f99993c62e16bb4)): ?>
@@ -168,59 +168,30 @@
 <?php unset($__componentOriginalb2c43a998f3174877f99993c62e16bb4); ?>
 <?php endif; ?>
                             <div class="mt-2">
-                                <select id="category_id" name="category_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-900 sm:text-sm sm:leading-6">
-                                    <option value="">Select a category</option>
+                                <select id="category_id" name="category_id" required aria-describedby="category-error" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset <?php echo e($errors->has('category_id') ? 'ring-red-500 focus:ring-red-500' : 'ring-gray-300 focus:ring-gray-900'); ?> sm:text-sm sm:leading-6">
+                                    <option value="" disabled <?php echo e(old('category_id', $news->category_id) ? '' : 'selected'); ?>>Select a category</option>
                                     <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <option value="<?php echo e($category->id); ?>" <?php echo e(old('category_id', $news->category_id) == $category->id ? 'selected' : ''); ?>><?php echo e($category->name); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
+                            <?php $__errorArgs = ['category_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                <p id="category-error" class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p>
+                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
-                        <div class="sm:col-span-6">
-                            <?php if (isset($component)) { $__componentOriginalb2c43a998f3174877f99993c62e16bb4 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalb2c43a998f3174877f99993c62e16bb4 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.label','data' => ['for' => 'slug','value' => 'Slug *']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('ui.label'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['for' => 'slug','value' => 'Slug *']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalb2c43a998f3174877f99993c62e16bb4)): ?>
-<?php $attributes = $__attributesOriginalb2c43a998f3174877f99993c62e16bb4; ?>
-<?php unset($__attributesOriginalb2c43a998f3174877f99993c62e16bb4); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalb2c43a998f3174877f99993c62e16bb4)): ?>
-<?php $component = $__componentOriginalb2c43a998f3174877f99993c62e16bb4; ?>
-<?php unset($__componentOriginalb2c43a998f3174877f99993c62e16bb4); ?>
-<?php endif; ?>
-                            <div class="mt-2">
-                                <?php if (isset($component)) { $__componentOriginal65bd7e7dbd93cec773ad6501ce127e46 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal65bd7e7dbd93cec773ad6501ce127e46 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.input','data' => ['id' => 'slug','name' => 'slug','type' => 'text','value' => ''.e(old('slug', $news->slug)).'','required' => true,'class' => 'font-mono text-sm']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('ui.input'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['id' => 'slug','name' => 'slug','type' => 'text','value' => ''.e(old('slug', $news->slug)).'','required' => true,'class' => 'font-mono text-sm']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal65bd7e7dbd93cec773ad6501ce127e46)): ?>
-<?php $attributes = $__attributesOriginal65bd7e7dbd93cec773ad6501ce127e46; ?>
-<?php unset($__attributesOriginal65bd7e7dbd93cec773ad6501ce127e46); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal65bd7e7dbd93cec773ad6501ce127e46)): ?>
-<?php $component = $__componentOriginal65bd7e7dbd93cec773ad6501ce127e46; ?>
-<?php unset($__componentOriginal65bd7e7dbd93cec773ad6501ce127e46); ?>
-<?php endif; ?>
-                            </div>
-                        </div>
+                        <?php echo $__env->make('admin.news._slug-assistant', [
+                            'slugNewsId' => $news->id,
+                            'slugInitialTitle' => old('title', $news->title),
+                            'slugInitialValue' => old('slug', $news->slug),
+                        ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
                         <div class="sm:col-span-6">
                             <?php if (isset($component)) { $__componentOriginalb2c43a998f3174877f99993c62e16bb4 = $component; } ?>
@@ -438,10 +409,10 @@
                         </div>
 
                         <div class="flex gap-3 pt-2">
-                            <button type="submit" name="action" value="approve" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600">
+                            <button type="submit" name="action" value="approve" onclick="return window.confirm('Apakah Anda yakin ingin menyetujui artikel ini?');" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600">
                                 Approve Article
                             </button>
-                            <button type="submit" name="action" value="revise" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-600">
+                            <button type="submit" name="action" value="revise" onclick="return window.confirm('Apakah Anda yakin ingin meminta revisi artikel ini?');" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-600">
                                 Request Revision
                             </button>
                         </div>
@@ -478,7 +449,7 @@
                     <?php echo csrf_field(); ?>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <p class="text-sm text-gray-600">This article has been approved and is ready to be published to the public website.</p>
-                        <button type="submit" name="action" value="publish" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-600">
+                        <button type="submit" name="action" value="publish" onclick="return window.confirm('Apakah Anda yakin ingin mempublikasikan artikel ini?');" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-600">
                             Publish Now
                         </button>
                     </div>
@@ -497,18 +468,6 @@
     </div>
     
     <?php $__env->startPush('scripts'); ?>
-    <script>
-        document.getElementById('title').addEventListener('blur', function(e) {
-            let slugInput = document.getElementById('slug');
-            if (slugInput.value.trim() === '') {
-                let slug = e.target.value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/(^-|-$)+/g, '');
-                slugInput.value = slug;
-            }
-        });
-    </script>
     <?php echo app('Illuminate\Foundation\Vite')(['resources/js/editor.js']); ?>
     <?php $__env->stopPush(); ?>
  <?php echo $__env->renderComponent(); ?>

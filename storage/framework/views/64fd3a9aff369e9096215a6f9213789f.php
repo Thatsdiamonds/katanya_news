@@ -9,21 +9,21 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
      <?php $__env->slot('header', null, []); ?> 
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center gap-4">
             <h2 class="text-2xl font-bold tracking-tight text-gray-900">
                 <?php echo e(__('Articles')); ?>
 
             </h2>
             <?php if (isset($component)) { $__componentOriginala8bb031a483a05f647cb99ed3a469847 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginala8bb031a483a05f647cb99ed3a469847 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.button','data' => ['href' => ''.e(route('admin.news.create')).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.ui.button','data' => ['href' => ''.e(route('admin.news.create')).'','class' => 'ml-4']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('ui.button'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['href' => ''.e(route('admin.news.create')).'']); ?>
+<?php $component->withAttributes(['href' => ''.e(route('admin.news.create')).'','class' => 'ml-4']); ?>
                 Create Article
              <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
@@ -164,7 +164,7 @@
                                         <?php endif; ?>
 
                                         <?php if(auth()->user()->role === 'superadmin' && $item->status === 'approved'): ?>
-                                        <form method="POST" action="<?php echo e(route('admin.news.review', $item)); ?>" class="inline">
+                                        <form method="POST" action="<?php echo e(route('admin.news.review', $item)); ?>" class="inline" onsubmit="return window.confirm('Apakah Anda yakin ingin mempublikasikan artikel ini?');">
                                             <?php echo csrf_field(); ?>
                                             <input type="hidden" name="action" value="publish">
                                             <?php if (isset($component)) { $__componentOriginala8bb031a483a05f647cb99ed3a469847 = $component; } ?>
@@ -217,7 +217,7 @@
                                         <?php endif; ?>
 
                                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('submit', $item)): ?>
-                                        <form method="POST" action="<?php echo e(route('admin.news.submit', $item)); ?>" class="inline">
+                                        <form method="POST" action="<?php echo e(route('admin.news.submit', $item)); ?>" class="inline" onsubmit="return window.confirm('Apakah Anda yakin ingin mengirim artikel ini untuk ditinjau?');">
                                             <?php echo csrf_field(); ?>
                                             <?php if (isset($component)) { $__componentOriginala8bb031a483a05f647cb99ed3a469847 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginala8bb031a483a05f647cb99ed3a469847 = $attributes; } ?>

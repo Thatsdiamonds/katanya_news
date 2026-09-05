@@ -51,6 +51,7 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     
+    Route::get('news/slug-suggestions', [AdminNewsController::class, 'slugSuggestions'])->name('news.slug-suggestions');
     Route::resource('news', AdminNewsController::class);
     Route::post('news/{news}/submit', [AdminNewsController::class, 'submit'])->name('news.submit');
     Route::get('news/{news}/preview', [AdminNewsController::class, 'preview'])->name('news.preview');

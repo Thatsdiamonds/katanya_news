@@ -75,7 +75,7 @@
                         <p class="text-xs font-medium text-gray-500 capitalize truncate"><?php echo e(auth()->user()->role); ?></p>
                     </div>
                 </div>
-                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                <form method="POST" action="<?php echo e(route('logout')); ?>" onsubmit="return window.confirm('Apakah Anda yakin ingin logout?');">
                     <?php echo csrf_field(); ?>
                     <button type="submit" class="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-50 transition-colors">
                         <svg class="mr-3 flex-shrink-0 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>

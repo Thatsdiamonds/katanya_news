@@ -48,24 +48,25 @@
                         </div>
 
                         <div class="sm:col-span-2">
-                            <x-ui.label for="category_id" value="Category" />
+                            <x-ui.label for="category_id" value="Category *" />
                             <div class="mt-2">
-                                <select id="category_id" name="category_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-900 sm:text-sm sm:leading-6">
-                                    <option value="">Select a category</option>
+                                <select id="category_id" name="category_id" required aria-describedby="category-error" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset {{ $errors->has('category_id') ? 'ring-red-500 focus:ring-red-500' : 'ring-gray-300 focus:ring-gray-900' }} sm:text-sm sm:leading-6">
+                                    <option value="" disabled {{ old('category_id') ? '' : 'selected' }}>Select a category</option>
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            @error('category_id')
+                                <p id="category-error" class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <div class="sm:col-span-6">
-                            <x-ui.label for="slug" value="Slug *" />
-                            <div class="mt-2">
-                                <x-ui.input id="slug" name="slug" type="text" value="{{ old('slug') }}" required placeholder="article-url-slug" class="font-mono text-sm" />
-                            </div>
-                            <p class="mt-1 text-sm text-gray-500">Unique URL identifier. Auto-generated from title.</p>
-                        </div>
+                        @include('admin.news._slug-assistant', [
+                            'slugNewsId' => null,
+                            'slugInitialTitle' => old('title', ''),
+                            'slugInitialValue' => old('slug', ''),
+                        ])
 
                         <div class="sm:col-span-6">
                             <x-ui.label for="excerpt" value="Excerpt" />
@@ -126,18 +127,6 @@
     </div>
     
     @push('scripts')
-    <script>
-        document.getElementById('title').addEventListener('blur', function(e) {
-            let slugInput = document.getElementById('slug');
-            if (slugInput.value.trim() === '') {
-                let slug = e.target.value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/(^-|-$)+/g, '');
-                slugInput.value = slug;
-            }
-        });
-    </script>
     @vite(['resources/js/editor.js'])
     @endpush
 </x-app-layout>

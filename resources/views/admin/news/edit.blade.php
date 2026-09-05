@@ -71,23 +71,25 @@
                         </div>
 
                         <div class="sm:col-span-2">
-                            <x-ui.label for="category_id" value="Category" />
+                            <x-ui.label for="category_id" value="Category *" />
                             <div class="mt-2">
-                                <select id="category_id" name="category_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-gray-900 sm:text-sm sm:leading-6">
-                                    <option value="">Select a category</option>
+                                <select id="category_id" name="category_id" required aria-describedby="category-error" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset {{ $errors->has('category_id') ? 'ring-red-500 focus:ring-red-500' : 'ring-gray-300 focus:ring-gray-900' }} sm:text-sm sm:leading-6">
+                                    <option value="" disabled {{ old('category_id', $news->category_id) ? '' : 'selected' }}>Select a category</option>
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ old('category_id', $news->category_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                            @error('category_id')
+                                <p id="category-error" class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <div class="sm:col-span-6">
-                            <x-ui.label for="slug" value="Slug *" />
-                            <div class="mt-2">
-                                <x-ui.input id="slug" name="slug" type="text" value="{{ old('slug', $news->slug) }}" required class="font-mono text-sm" />
-                            </div>
-                        </div>
+                        @include('admin.news._slug-assistant', [
+                            'slugNewsId' => $news->id,
+                            'slugInitialTitle' => old('title', $news->title),
+                            'slugInitialValue' => old('slug', $news->slug),
+                        ])
 
                         <div class="sm:col-span-6">
                             <x-ui.label for="excerpt" value="Excerpt" />
@@ -175,10 +177,10 @@
                         </div>
 
                         <div class="flex gap-3 pt-2">
-                            <button type="submit" name="action" value="approve" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600">
+                            <button type="submit" name="action" value="approve" onclick="return window.confirm('Apakah Anda yakin ingin menyetujui artikel ini?');" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600">
                                 Approve Article
                             </button>
-                            <button type="submit" name="action" value="revise" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-600">
+                            <button type="submit" name="action" value="revise" onclick="return window.confirm('Apakah Anda yakin ingin meminta revisi artikel ini?');" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-600">
                                 Request Revision
                             </button>
                         </div>
@@ -197,7 +199,7 @@
                     @csrf
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <p class="text-sm text-gray-600">This article has been approved and is ready to be published to the public website.</p>
-                        <button type="submit" name="action" value="publish" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-600">
+                        <button type="submit" name="action" value="publish" onclick="return window.confirm('Apakah Anda yakin ingin mempublikasikan artikel ini?');" class="inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md px-4 py-2 text-sm bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-600">
                             Publish Now
                         </button>
                     </div>
@@ -207,18 +209,6 @@
     </div>
     
     @push('scripts')
-    <script>
-        document.getElementById('title').addEventListener('blur', function(e) {
-            let slugInput = document.getElementById('slug');
-            if (slugInput.value.trim() === '') {
-                let slug = e.target.value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/(^-|-$)+/g, '');
-                slugInput.value = slug;
-            }
-        });
-    </script>
     @vite(['resources/js/editor.js'])
     @endpush
 </x-app-layout>

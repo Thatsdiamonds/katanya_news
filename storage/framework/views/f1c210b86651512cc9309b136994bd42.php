@@ -39,13 +39,18 @@
                         </a>
                     </div>
                     
-                    <!-- Search Bar -->
+                   <!-- Search Bar -->
                     <div class="hidden md:flex flex-1 max-w-md mx-8">
-                        <form action="<?php echo e(route('home')); ?>" method="GET" class="relative w-full group">
-                            <input type="text" name="search" placeholder="Cari artikel atau topik..." value="<?php echo e(request('search')); ?>" 
-                                class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-full text-sm placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all">
-                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-gray-900 transition-colors">
-                                <i class="ri-search-2-line text-sm"></i>
+                        <form action="<?php echo e(route('home')); ?>" method="GET" class="w-full">
+                            <div class="flex items-center w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-full text-gray-400 focus-within:text-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900 focus-within:border-transparent transition-all gap-2">
+                                
+                                <div class="flex items-center justify-center shrink-0 mr-2.5">
+                                    <i class="ri-search-2-line text-base leading-none block"></i>
+                                </div>
+
+                                <input type="text" name="search" placeholder="Cari artikel atau topik..." value="<?php echo e(request('search')); ?>" 
+                                    class="w-full p-0 bg-transparent border-none text-sm placeholder-gray-400 focus:outline-none focus:ring-0">
+                                    
                             </div>
                         </form>
                     </div>
@@ -53,14 +58,7 @@
                     <div class="flex items-center space-x-6 text-sm font-medium">
                         <?php if(auth()->guard()->check()): ?>
                             <a href="<?php echo e(url('/admin')); ?>" class="text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1.5">
-                                <span class="h-7 w-7 rounded-full bg-gray-100 ring-1 ring-gray-200 flex items-center justify-center overflow-hidden text-xs font-bold text-gray-600 uppercase">
-                                    <?php if(auth()->user()->avatar): ?>
-                                        <img src="<?php echo e(Storage::disk('public')->url(auth()->user()->avatar)); ?>" alt="<?php echo e(auth()->user()->name); ?>" class="h-full w-full object-cover">
-                                    <?php else: ?>
-                                        <?php echo e(substr(auth()->user()->name, 0, 1)); ?>
-
-                                    <?php endif; ?>
-                                </span>
+                                <i class="ri-dashboard-3-line text-base text-gray-500"></i>
                                 <span>Dashboard</span>
                             </a>
                         <?php else: ?>

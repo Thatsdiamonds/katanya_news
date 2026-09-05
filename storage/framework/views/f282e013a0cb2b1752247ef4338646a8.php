@@ -50,7 +50,7 @@
             </div>
         </form>
 
-        <form method="POST" action="<?php echo e(route('logout')); ?>">
+        <form method="POST" action="<?php echo e(route('logout')); ?>" onsubmit="return window.confirm('Apakah Anda yakin ingin logout?');">
             <?php echo csrf_field(); ?>
 
             <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
