@@ -39,3 +39,9 @@ cd news
 
 composer install
 npm install
+
+php artisan storage:link
+php artisan generate:key
+
+npm dev build
+php artisan serve
