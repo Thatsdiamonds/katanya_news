@@ -219,27 +219,39 @@ class PublicNewsController extends Controller
 
         $query = $request->string('query')->toString();
 
-        $suggestions = News::where('status', 'published')
-            ->where(function ($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                  ->orWhere('excerpt', 'like', "%{$query}%");
-            })
-            ->with('category')
-            ->select('id', 'title', 'slug', 'category_id', 'views')
-            ->orderByDesc('views')
-            ->take(8)
-            ->get()
-            ->map(function ($news) {
-                return [
-                    'id' => $news->id,
-                    'title' => $news->title,
-                    'slug' => $news->slug,
-                    'category_name' => $news->category ? $news->category->name : '',
-                    'views' => $news->formatted_views,
-                    'url' => route('news.show', $news->slug),
-                ];
-            });
+        // Handle random placeholder request
+        if ($query === 'random') {
+            $suggestions = News::where('status', 'published')
+                ->with('category')
+                ->select('id', 'title', 'slug', 'category_id', 'views', 'image')
+                ->inRandomOrder()
+                ->take(5)
+                ->get();
+        } else {
+            $suggestions = News::where('status', 'published')
+                ->where(function ($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%")
+                      ->orWhere('excerpt', 'like', "%{$query}%");
+                })
+                ->with('category')
+                ->select('id', 'title', 'slug', 'category_id', 'views', 'image')
+                ->orderByDesc('views')
+                ->take(8)
+                ->get();
+        }
 
-        return response()->json($suggestions);
+        $results = $suggestions->map(function ($news) {
+            return [
+                'id' => $news->id,
+                'title' => $news->title,
+                'slug' => $news->slug,
+                'category_name' => $news->category ? $news->category->name : '',
+                'views' => $news->formatted_views,
+                'url' => route('news.show', $news->slug),
+                'image' => $news->image ? \Illuminate\Support\Facades\Storage::url($news->image) : null,
+            ];
+        });
+
+        return response()->json($results);
     }
 }
