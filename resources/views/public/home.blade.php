@@ -358,12 +358,20 @@
                         </div>
 
                         <!-- Trending Articles List -->
-                        <div class="space-y-2.5">
+                        <div class="space-y-3">
                             @foreach($item['articles'] as $index => $article)
-                            <article class="group flex items-start gap-2.5">
+                            <article class="group flex items-start gap-3">
                                 <div class="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
                                     {{ $index + 1 }}
                                 </div>
+
+                                <!-- Article Image -->
+                                @if($article->image)
+                                <a href="{{ route('news.show', $article->slug) }}" class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                                    <img src="{{ Storage::url($article->image) }}" alt="{{ $article->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" loading="lazy">
+                                </a>
+                                @endif
+
                                 <div class="flex-1 min-w-0">
                                     <a href="{{ route('news.show', $article->slug) }}" class="block">
                                         <h4 class="font-serif text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight mb-1">
