@@ -20,7 +20,8 @@ class News extends Model
         'status',
         'rejection_reason',
         'author_id',
-        'published_at'
+        'published_at',
+        'views'
     ];
 
     protected $casts = [
@@ -35,5 +36,34 @@ class News extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Increment the views count with session-based throttle
+     */
+    public function incrementViews()
+    {
+        $sessionKey = 'viewed_news_' . $this->id;
+
+        if (!session()->has($sessionKey)) {
+            $this->increment('views');
+            session()->put($sessionKey, true);
+        }
+    }
+
+    /**
+     * Format views count for display (1.2K, 1.5M, etc.)
+     */
+    public function getFormattedViewsAttribute()
+    {
+        $views = $this->views;
+
+        if ($views >= 1000000) {
+            return round($views / 1000000, 1) . 'M';
+        } elseif ($views >= 1000) {
+            return round($views / 1000, 1) . 'K';
+        }
+
+        return (string) $views;
     }
 }
