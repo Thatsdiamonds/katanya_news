@@ -75,6 +75,9 @@
                                 <span>&middot;</span>
                                 <i class="ri-time-line text-[11px]"></i>
                                 <span>{{ ceil(str_word_count(strip_tags($news->content)) / 200) }} menit baca</span>
+                                <span>&middot;</span>
+                                <i class="ri-eye-line text-[11px]"></i>
+                                <span>{{ $news->formatted_views }} views</span>
                             </div>
                         </div>
                     </div>
