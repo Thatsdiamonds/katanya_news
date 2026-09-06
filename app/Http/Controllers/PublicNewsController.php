@@ -78,6 +78,44 @@ class PublicNewsController extends Controller
             ->take(4)
             ->get();
 
+        // Trending by Category - Top 4 categories with their most viewed articles (last 7 days)
+        $trendingByCategory = Category::withCount(['news' => function ($q) {
+                $q->where('status', 'published');
+            }])
+            ->whereHas('news', function ($q) {
+                $q->where('status', 'published');
+            })
+            ->orderByDesc('news_count')
+            ->take(4)
+            ->get()
+            ->map(function ($category) {
+                $trendingArticles = News::with(['author', 'category'])
+                    ->where('status', 'published')
+                    ->where('category_id', $category->id)
+                    ->where('published_at', '>=', now()->subDays(7))
+                    ->orderByDesc('views')
+                    ->take(3)
+                    ->get();
+
+                // Fallback to latest if not enough trending
+                if ($trendingArticles->count() < 3) {
+                    $fallback = News::with(['author', 'category'])
+                        ->where('status', 'published')
+                        ->where('category_id', $category->id)
+                        ->whereNotIn('id', $trendingArticles->pluck('id'))
+                        ->latest('published_at')
+                        ->take(3 - $trendingArticles->count())
+                        ->get();
+                    $trendingArticles = $trendingArticles->concat($fallback);
+                }
+
+                return [
+                    'category' => $category,
+                    'articles' => $trendingArticles,
+                ];
+            })
+            ->filter(fn($item) => $item['articles']->isNotEmpty());
+
         // Articles pool for preference-based recommendations
         $categoryNewsPool = News::with(['author', 'category'])
             ->where('status', 'published')
@@ -126,16 +164,19 @@ class PublicNewsController extends Controller
                 ];
             });
 
-        return view('public.home', compact('news', 'categories', 'technologyNews', 'topCategories', 'topAuthors', 'editorPicks', 'categoryNewsPool'));
+        return view('public.home', compact('news', 'categories', 'technologyNews', 'topCategories', 'topAuthors', 'editorPicks', 'categoryNewsPool', 'trendingByCategory'));
     }
 
     public function show(News $news)
     {
         $canPreview = auth()->check() && (auth()->user()->role === 'superadmin' || auth()->id() === $news->author_id);
-        
+
         if ($news->status !== 'published' && !$canPreview) {
             abort(404);
         }
+
+        // Increment views with session-based throttle
+        $news->incrementViews();
 
         $news->load(['author', 'category']);
 
@@ -165,5 +206,40 @@ class PublicNewsController extends Controller
         }
 
         return view('public.news.show', compact('news', 'categories', 'relatedNews'));
+    }
+
+    /**
+     * Search hints API endpoint for autocomplete
+     */
+    public function searchHints(Request $request)
+    {
+        $request->validate([
+            'query' => ['required', 'string', 'min:3', 'max:255'],
+        ]);
+
+        $query = $request->string('query')->toString();
+
+        $suggestions = News::where('status', 'published')
+            ->where(function ($q) use ($query) {
+                $q->where('title', 'like', "%{$query}%")
+                  ->orWhere('excerpt', 'like', "%{$query}%");
+            })
+            ->with('category')
+            ->select('id', 'title', 'slug', 'category_id', 'views')
+            ->orderByDesc('views')
+            ->take(8)
+            ->get()
+            ->map(function ($news) {
+                return [
+                    'id' => $news->id,
+                    'title' => $news->title,
+                    'slug' => $news->slug,
+                    'category_name' => $news->category ? $news->category->name : '',
+                    'views' => $news->formatted_views,
+                    'url' => route('news.show', $news->slug),
+                ];
+            });
+
+        return response()->json($suggestions);
     }
 }

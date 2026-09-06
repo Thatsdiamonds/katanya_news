@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 // Public routes
 Route::get('/', [PublicNewsController::class, 'index'])->name('home');
 Route::get('/news/{news:slug}', [PublicNewsController::class, 'show'])->name('news.show');
+Route::get('/api/search-hints', [PublicNewsController::class, 'searchHints'])->name('api.search-hints');
 
 // Directly serve public storage files reliably across all environments
 Route::get('/storage/{path}', function (string $path) {

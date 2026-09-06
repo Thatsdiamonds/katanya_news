@@ -43,14 +43,16 @@
                     <div class="hidden md:flex flex-1 max-w-md mx-8">
                         <form action="{{ route('home') }}" method="GET" class="w-full">
                             <div class="flex items-center w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-full text-gray-400 focus-within:text-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900 focus-within:border-transparent transition-all gap-2">
-                                
+
                                 <div class="flex items-center justify-center shrink-0 mr-2.5">
                                     <i class="ri-search-2-line text-base leading-none block"></i>
                                 </div>
 
-                                <input type="text" name="search" placeholder="Cari artikel atau topik..." value="{{ request('search') }}" 
-                                    class="w-full p-0 bg-transparent border-none text-sm placeholder-gray-400 focus:outline-none focus:ring-0">
-                                    
+                                <input type="text" name="search" placeholder="Cari artikel atau topik..." value="{{ request('search') }}"
+                                    class="w-full p-0 bg-transparent border-none text-sm placeholder-gray-400 focus:outline-none focus:ring-0"
+                                    data-search-hints
+                                    autocomplete="off">
+
                             </div>
                         </form>
                     </div>
