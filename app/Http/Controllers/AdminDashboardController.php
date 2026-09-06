@@ -22,10 +22,22 @@ class AdminDashboardController extends Controller
             'pending' => (clone $query)->where('status', 'pending')->count(),
             'revision' => (clone $query)->where('status', 'revision')->count(),
             'published' => (clone $query)->where('status', 'published')->count(),
+            'total_views' => (clone $query)->where('status', 'published')->sum('views'),
         ];
 
         $recentNews = $query->with('author')->latest('updated_at')->take(5)->get();
 
-        return view('admin.dashboard', compact('stats', 'recentNews'));
+        // Most viewed articles
+        $mostViewedQuery = News::with(['author', 'category'])
+            ->where('status', 'published')
+            ->orderByDesc('views');
+
+        if ($user->role === 'writer') {
+            $mostViewedQuery->where('author_id', $user->id);
+        }
+
+        $mostViewed = $mostViewedQuery->take(5)->get();
+
+        return view('admin.dashboard', compact('stats', 'recentNews', 'mostViewed'));
     }
 }
