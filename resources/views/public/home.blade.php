@@ -334,6 +334,60 @@
             </div>
             @endif
 
+            <!-- Trending per Kategori Section -->
+            @if(isset($trendingByCategory) && $trendingByCategory->count() > 0)
+            <div class="mb-5">
+                <div class="mb-2.5">
+                    <h2 class="text-xl md:text-2xl font-bold font-serif text-gray-900 tracking-tight flex items-center gap-2">
+                        <i class="ri-fire-line text-orange-500 text-lg font-normal"></i>
+                        <span>Trending per Kategori</span>
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-0.5">Artikel paling banyak dilihat 7 hari terakhir</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach($trendingByCategory as $item)
+                    <div class="bg-white p-4 rounded-xl shadow-xs border border-gray-200/70">
+                        <!-- Category Header -->
+                        <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                            <a href="{{ route('home', ['category' => $item['category']->slug]) }}"
+                               class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-bold hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm">
+                                <i class="ri-hashtag text-xs"></i>
+                                {{ $item['category']->name }}
+                            </a>
+                            <span class="text-xs text-gray-400">{{ $item['category']->news_count }} artikel</span>
+                        </div>
+
+                        <!-- Trending Articles List -->
+                        <div class="space-y-2.5">
+                            @foreach($item['articles'] as $index => $article)
+                            <article class="group flex items-start gap-2.5">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white font-bold text-xs">
+                                    {{ $index + 1 }}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <a href="{{ route('news.show', $article->slug) }}" class="block">
+                                        <h4 class="font-serif text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight mb-1">
+                                            {{ $article->title }}
+                                        </h4>
+                                    </a>
+                                    <div class="flex items-center gap-2 text-xs text-gray-500">
+                                        <span class="flex items-center gap-1">
+                                            <i class="ri-eye-line text-xs"></i>
+                                            {{ $article->formatted_views }}
+                                        </span>
+                                        <span>&middot;</span>
+                                        <x-news-date :date="$article->published_at" />
+                                    </div>
+                                </div>
+                            </article>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
             <!-- Preferensi Kategori Section (Restored Original Layout with Starred Priority) -->
             <div id="preferensi-kategori" class="bg-white p-4 rounded-xl shadow-xs border border-gray-200/70 mb-5">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-center">
